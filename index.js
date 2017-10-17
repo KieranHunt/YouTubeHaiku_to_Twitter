@@ -1,6 +1,8 @@
 // Warning:
 // I don't really know what I'm going with NodeJs.
 
+// Here be dragons
+
 var fs = require('fs');
 var youtubedl = require('youtube-dl');
 var Twitter = require('twitter');

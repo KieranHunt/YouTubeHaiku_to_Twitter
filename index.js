@@ -1,3 +1,6 @@
+// Warning:
+// I don't really know what I'm going with NodeJs.
+
 var fs = require('fs');
 var youtubedl = require('youtube-dl');
 var Twitter = require('twitter');
@@ -53,11 +56,6 @@ function upload_video_and_tweet(temp_file_path, title, callback){
     }, callback);
   }
 
-  /**
-  * Step 2 of 3: Append file chunk
-  * @param String mediaId    Reference to media object being uploaded
-  * @return Promise resolving to String mediaId (for chaining)
-  */
   function appendUpload (mediaId, callback) {
     makePost('media/upload', {
       command: 'APPEND',

@@ -1,11 +1,9 @@
-language: node_js
-before_install:
-  - apt-get install python-pip python-dev build-essential
-  - pip install awscli
-install:
-  - echo "{\"twitter\": {\"consumer_key\": \"$consumer_key\", \"consumer_secret\": \"$consumer_secret\", \"access_token_key\": \"$access_token_key\", \"access_token_secret\": \"$access_token_secret\"}}" > creds.json
-  - npm install
-before_deploy:
-  - zip -r youtubehaiku_to_twitter.zip .
-deploy:
-  - aws lambda update-function-code --function-name YouTubeHaiku_to_Twitter --zip-file fileb://youtubehaiku_to_twitter.zip --region eu-west-1
+language: generic
+before_script: |
+  apt-get install python-pip python-dev build-essential
+  pip install awscli
+  echo "{\"twitter\": {\"consumer_key\": \"$consumer_key\", \"consumer_secret\": \"$consumer_secret\", \"access_token_key\": \"$access_token_key\", \"access_token_secret\": \"$access_token_secret\"}}" > creds.json
+  npm install
+  zip -r youtubehaiku_to_twitter.zip .
+script: |
+  aws lambda update-function-code --function-name YouTubeHaiku_to_Twitter --zip-file fileb://youtubehaiku_to_twitter.zip --region eu-west-1

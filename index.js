@@ -34,33 +34,23 @@ function upload_video_and_tweet(temp_file_path, title, callback){
   var mediaType = 'video/mp4';
   var mediaSize = fs.statSync(temp_file_path).size;
 
-  initUpload()
-    .then(appendUpload)
-    .then(finalizeUpload)
-    .then(mediaId => {
-      var status = {
-        status: decode(title),
-        media_ids: mediaId
-      }
-
-      client.post('statuses/update', status, function(error, tweet, response) {
-        if (!error) {
-          console.log(tweet);
+  initUpload((response) => {
+    mediaId = response.media_id_string;
+    appendUpload(mediaId, (response) => {
+      finalizeUpload(mediaId, (response) => {
+        tweet(mediaId, (tweet) => {
           callback(null, `Tweeted! https://twitter.com/rYoutubeHaiku_d/status/${tweet.id_str}`);
-        }
-      });
-    });
+        })
+      })
+    })
+  });
 
-  /**
-  * Step 1 of 3: Initialize a media upload
-  * @return Promise resolving to String mediaId
-  */
-  function initUpload () {
-    return makePost('media/upload', {
-      command    : 'INIT',
+  function initUpload (callback) {
+    makePost('media/upload', {
+      command: 'INIT',
       total_bytes: mediaSize,
-      media_type : mediaType,
-    }).then(data => data.media_id_string);
+      media_type: mediaType,
+    }, callback);
   }
 
   /**
@@ -68,44 +58,36 @@ function upload_video_and_tweet(temp_file_path, title, callback){
   * @param String mediaId    Reference to media object being uploaded
   * @return Promise resolving to String mediaId (for chaining)
   */
-  function appendUpload (mediaId) {
-    return makePost('media/upload', {
-      command      : 'APPEND',
-      media_id     : mediaId,
-      media        : mediaData,
+  function appendUpload (mediaId, callback) {
+    makePost('media/upload', {
+      command: 'APPEND',
+      media_id: mediaId,
+      media: mediaData,
       segment_index: 0
-    }).then(data => mediaId);
+    }, callback);
   }
 
-  /**
-  * Step 3 of 3: Finalize upload
-  * @param String mediaId   Reference to media
-  * @return Promise resolving to mediaId (for chaining)
-  */
-  function finalizeUpload (mediaId) {
-    return makePost('media/upload', {
-      command : 'FINALIZE',
+  function finalizeUpload (mediaId, callback) {
+    makePost('media/upload', {
+      command: 'FINALIZE',
       media_id: mediaId
-    }).then(data => mediaId);
+    }, callback);
   }
 
-  /**
-  * (Utility function) Send a POST request to the Twitter API
-  * @param String endpoint  e.g. 'statuses/upload'
-  * @param Object params    Params object to send
-  * @return Promise         Rejects if response is error
-  */
-  function makePost (endpoint, params) {
-    return new Promise((resolve, reject) => {
-      client.post(endpoint, params, (error, data, response) => {
-        if (error) {
-          console.log("Could not make post request!");
-          console.log(error);
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
+  function tweet(mediaId, callback) {
+    makePost('statuses/update', {
+      status: decode(title),
+      media_ids: mediaId
+    }, callback);
+  }
+
+  function makePost (endpoint, params, callback) {
+    client.post(endpoint, params, (error, data, response) => {
+      if (error) {
+        throw error;
+      } else {
+        callback(data);
+      }
     });
   }
 }

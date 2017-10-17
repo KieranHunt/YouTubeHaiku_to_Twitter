@@ -1,0 +1,18 @@
+{
+  "name": "youtubehaiku_to_twitter",
+  "version": "1.0.0",
+  "description": "/r/YouTubeHaiku to Twitter",
+  "main": "index.js",
+  "dependencies": {
+    "twitter": "^1.7.1",
+    "valid-url": "^1.0.9",
+    "unescape": "^1.0.1",
+    "youtube-dl": "^1.12.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kieran Hunt",
+  "license": "MIT"
+}

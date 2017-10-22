@@ -1,7 +1,7 @@
 # YouTubeHaiku to Twitter
 
-![](https://img.shields.io/twitter/follow/rYoutubeHaiku.svg?style=flat&label=Follow)
-![](https://img.shields.io/travis/KieranHunt/YouTubeHaiku_to_Twitter.svg?style=flat)
+[![](https://img.shields.io/twitter/follow/rYoutubeHaiku.svg?style=flat&label=Follow)](https://twitter.com/rYouTubeHaiku)
+[![](https://img.shields.io/travis/KieranHunt/YouTubeHaiku_to_Twitter.svg?style=flat)](https://travis-ci.org/KieranHunt/YouTubeHaiku_to_Twitter)
 
 How it works:
 - An IFTTT applet, triggered by a new hot post on /r/youtubehaiku, creates a web

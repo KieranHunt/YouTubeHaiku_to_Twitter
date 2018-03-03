@@ -31,7 +31,7 @@ function twitter_api_creds() {
   return JSON.parse(credentials()).twitter;
 }
 
-function upload_video_and_tweet(temp_file_path, title, callback){
+function upload_video_and_tweet(temp_file_path, title, callback, url){
   console.log('Video download finished. Starting upload.');
   var client = new Twitter(twitter_api_creds());
 
@@ -76,7 +76,7 @@ function upload_video_and_tweet(temp_file_path, title, callback){
 
   function tweet(mediaId, callback) {
     makePost('statuses/update', {
-      status: decode(title),
+      status: `${decode(title)}\n${url}`,
       media_ids: mediaId
     }, callback);
   }
@@ -110,6 +110,6 @@ exports.handler = (event, context, callback) => {
   download_video(
     temp_file_path,
     url,
-    () => { upload_video_and_tweet(temp_file_path, body.title, callback) }
+    () => { upload_video_and_tweet(temp_file_path, body.title, callback, url) }
   );
 };
